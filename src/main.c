@@ -43,6 +43,8 @@ int main() {
 
     fclose(filePointer);
     printf("Finished processing file: %s\n", entryPoint->d_name);
+
+    free(filePath);
   }
 
   closedir(directoryPointer);
