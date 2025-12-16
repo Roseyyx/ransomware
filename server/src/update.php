@@ -2,6 +2,8 @@
 
 require_once "connect.php";
 
+$paid = 0;
+
 if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
   $sql = "SELECT * FROM clients WHERE id = ?";
 
@@ -46,6 +48,8 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
 } else if (isset($_GET["machineId"]) && !empty(trim($_GET["machineId"]))) {
   $hashedId = hash("sha256", $_GET["machineId"]);
 
+  echo $hashedId;
+
   $sql = "SELECT * FROM clients WHERE machineHash = ?";
 
   if ($stmt = mysqli_prepare($link, $sql)) {
@@ -64,6 +68,8 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
 
         return $paid;
       }
+    } else {
+      echo "Machine not found";
     }
   }
 }
