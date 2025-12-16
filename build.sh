@@ -23,7 +23,7 @@ done
 common_opts="-I$root/src -Wall"
 debug_opts="--debug -g --optimize -O2 -Werror -DDEBUG $common_opts"
 
-compile="$compiler $all_src -o ransomware $debug_opts"
+compile="$compiler $all_src -o ransomware $debug_opts $(pkg-config --cflags --libs gtk+-3.0)"
 
 echo "$compile"
 $compile

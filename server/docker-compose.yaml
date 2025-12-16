@@ -1,0 +1,19 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./src:/var/www/html/
+    depends_on:
+      - database
+  
+  database:
+   image: mysql:latest
+   environment:
+     MYSQL_ROOT_PASSWORD: R!@database12
+     MYSQL_DATABASE: leertaak
+   ports:
+      - 3306:3306
