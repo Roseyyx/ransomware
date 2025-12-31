@@ -8,4 +8,6 @@ Database: leertaak, tables: ID (int primary), machineHash (varchar), salt (varch
 
 server creates masterkey based on machineHash which consist of the machineId hashed with sha256 -> add salt to hash -> masterkey -> send to client
 
+Uses Jansson for json parsing and libcurl for web requests
+
 database key: R!@database12
