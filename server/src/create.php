@@ -39,15 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
   }
 
-  $randomSalt = bin2hex(random_bytes(16));
-  $combined = $input_machineId . $randomSalt;
-  $masterKey = hash("sha256", password_hash($combined, PASSWORD_DEFAULT));
   $paid = 0;
 
-  $sql = "INSERT INTO clients (masterKey, machineHash, salt, hasPaid) VALUES (?,?,?,?)";
+  $sql = "INSERT INTO clients (machineHash, hasPaid) VALUES (?,?)";
 
   if ($stmt = mysqli_prepare($link, $sql)) {
-    mysqli_stmt_bind_param($stmt, "sssi", $masterKey, $input_machineId, $randomSalt, $paid);
+    mysqli_stmt_bind_param($stmt, "si", $input_machineId, $paid);
     if (mysqli_stmt_execute($stmt)) {
       mysqli_stmt_close($stmt);
       mysqli_close($link);

